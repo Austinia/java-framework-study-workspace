@@ -21,6 +21,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY) // DB에서 자동으로 알아서 ID를 생성해주게 한다.
     private Integer id;
     private String name;
+    private String password; // field라고 한다.
 
 
 }
