@@ -58,7 +58,7 @@ public class UserControllerTests {
     public void create() throws Exception {
 //        String name = "Austin"; 자주 쓰니까 전역변수로 생성
         User user = User.builder().name(name).password(password).build(); // password가 새로 식별되었다.
-        given(userController.create(user)).willReturn(user); // 리턴되는 값이 없어서 필요없으나 컨트롤러의 식별을 위해서 임의로 결과값을 넣는다.
+        given(userController.save(user)).willReturn(user); // 리턴되는 값이 없어서 필요없으나 컨트롤러의 식별을 위해서 임의로 결과값을 넣는다.
         String jsonString = objectMapper.writeValueAsString(user); // user를 스트링으로 바꿀 예정
         mockMvc.perform(post("/api/save")
                 .contentType(MediaType.APPLICATION_JSON) // json 타입이고
@@ -75,5 +75,23 @@ public class UserControllerTests {
                 .andExpect(jsonPath("$.id", is(id)))
                 .andExpect(jsonPath("$.name", is(name)))
                 .andExpect(jsonPath("$.password", is(password)));
+    }
+
+    @Test
+    public void modify() throws Exception { // 생성과 비슷하다
+        User user = User.builder().id(id).name(name).password(password).build();
+        given(userController.save(user)).willReturn(user); // 컨트롤러 식별을 위한 과정
+        String jsonString = objectMapper.writeValueAsString(user);
+        mockMvc.perform(put("/api/save")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(jsonString))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void testDelete() throws Exception {
+        // 유저컨트롤러 테스트? 일단 목적을 달성했으니 테스트 먼저해보자
+        mockMvc.perform(delete("/api/delete/" + String.valueOf(id)))
+                .andExpect(status().isOk());
     }
 }

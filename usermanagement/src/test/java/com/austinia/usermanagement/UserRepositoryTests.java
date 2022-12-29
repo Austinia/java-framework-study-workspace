@@ -20,6 +20,7 @@ public class UserRepositoryTests {
 
     String name = "Austin";
     String password = "1234";
+    int id = 1;
     @Test
     public void findAll() {
 
@@ -43,4 +44,14 @@ public class UserRepositoryTests {
         assertThat(user.getPassword(), is(password));
     }
 
+    @Test
+    public void update() {
+        User user = User.builder().name(name).password(password).build();
+        user = userRepository.save(user); // 먼저 한번 저장하고
+        String testName = "Update Test Name";
+        user.setName(testName); // 이름을 수정하고
+        User savedUser = userRepository.save(user); // 수정한 이름을 저장한다.
+        assertThat(savedUser.getId(), is(user.getId())); // 수정한 Obj와 수정전 Obj의 ID가 같나?
+        assertThat(savedUser.getName(), is(testName)); // 수정한 Obj의 이름은 입력한 이름과 같나?
+    }
 }
