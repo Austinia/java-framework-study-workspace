@@ -33,8 +33,6 @@ public class UserDaoTests {
         String name = "Updated Hulk";
         String password = "1234";
 
-        // DaoFactory daoFactory = new DaoFactory();
-        // UserDao userDao = daoFactory.userDao();
         User user = userDao.get(id);
 
         assertThat(user.getId(),is(id));
@@ -47,8 +45,6 @@ public class UserDaoTests {
         String name = "Austin";
         String password = "1234";
 
-        // DaoFactory daoFactory = new DaoFactory();
-        // UserDao userDao = daoFactory.userDao();
         User user = new User();
         user.setName(name);
         user.setPassword(password);
@@ -66,16 +62,16 @@ public class UserDaoTests {
         String password = "1234";
         String updatedName = "AfterName";
         String updatedPassword = "4321";
-        // user를 하나 만들고
+
         User user = new User();
         user.setName(name);
         user.setPassword(password);
         userDao.insert(user);
-        // user 를 수정한다.
+
         user.setName(updatedName);
         user.setPassword(updatedPassword);
         userDao.update(user);
-        // 검증
+
         User updatedUser = userDao.get(user.getId());
         assertThat(updatedUser.getName(), is(updatedName));
         assertThat(updatedUser.getPassword(), is(updatedPassword));
@@ -85,14 +81,14 @@ public class UserDaoTests {
     public void delete() throws SQLException {
         String name = "HaveToDeleteThis";
         String password = "666";
-        // user를 하나 만들고
+
         User user = new User();
         user.setName(name);
         user.setPassword(password);
         userDao.insert(user);
-        // user 를 삭제한다.
+
         userDao.delete(user.getId());
-        // 검증
+
         User deletedUser = userDao.get(user.getId()); // 없는 걸 가져왔으니
         assertThat(deletedUser, IsNull.nullValue()); // null 인 것을 검증.
     }
