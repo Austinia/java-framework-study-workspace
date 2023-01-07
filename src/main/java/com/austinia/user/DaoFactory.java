@@ -21,7 +21,12 @@ public class DaoFactory {
 
     @Bean // 의존성을 담아 new 해서 오브젝트 인스턴스를 반환하는 인스턴스
     public UserDao userDao() {
-        return new UserDao(dataSource());
+        return new UserDao(jdbcContext());
+    }
+
+    @Bean
+    public JdbcContext jdbcContext() {
+        return new JdbcContext(dataSource());
     }
 
     @Bean
@@ -37,8 +42,4 @@ public class DaoFactory {
         dataSource.setPassword(password);
         return dataSource;
     }
-//    @Bean
-//    public ConnectionMaker connectionMaker() {
-//        return new JejuConnectionMaker();
-//    }
 }
