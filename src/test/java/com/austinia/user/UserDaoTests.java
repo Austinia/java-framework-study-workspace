@@ -3,8 +3,14 @@ package com.austinia.user;
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.RuntimeBeanReference;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.StaticApplicationContext;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.SimpleDriverDataSource;
 
 import java.sql.SQLException;
 
@@ -16,15 +22,31 @@ public class UserDaoTests {
 
     private static UserDao userDao;
 
-    @BeforeAll // 테스트 전에 수행해야할 것을 정의
-    public static void setup() {
-        // 빈들을 관리하는 여러 관리 방법 중에 하나.
-        // 어노테이션을 이용해서 빈을 관리하는 전략 패턴.
-        ApplicationContext applicationContext = new AnnotationConfigApplicationContext(DaoFactory.class);
-        // 여기(DaoFactory.java)에 빈의 정의가 어노테이션으로 되어 있다.
+    @BeforeAll
+    public static void setup() throws ClassNotFoundException {
+        // ApplicationContext applicationContext = new AnnotationConfigApplicationContext(DaoFactory.class);
+        StaticApplicationContext applicationContext = new StaticApplicationContext();
+
+        BeanDefinition dataSourcebeanDefinition = new RootBeanDefinition(SimpleDriverDataSource.class);
+        dataSourcebeanDefinition.getPropertyValues().addPropertyValue("driverClass"
+                , Class.forName(System.getenv("DB_CLASSNAME")));
+        dataSourcebeanDefinition.getPropertyValues().addPropertyValue("url"
+                , System.getenv("DB_URL"));
+        dataSourcebeanDefinition.getPropertyValues().addPropertyValue("username"
+                , System.getenv("DB_USERNAME"));
+        dataSourcebeanDefinition.getPropertyValues().addPropertyValue("password"
+                , System.getenv("DB_PASSWORD"));
+        applicationContext.registerBeanDefinition("dataSource", dataSourcebeanDefinition);
+
+        BeanDefinition jdbcContextbeanDefinition = new RootBeanDefinition(JdbcTemplate.class);
+        jdbcContextbeanDefinition.getConstructorArgumentValues().addGenericArgumentValue(new RuntimeBeanReference("dataSource"));
+        applicationContext.registerBeanDefinition("jdbcContext", jdbcContextbeanDefinition);
+
+        BeanDefinition beanDefinition = new RootBeanDefinition(UserDao.class);
+        beanDefinition.getConstructorArgumentValues().addGenericArgumentValue(new RuntimeBeanReference("jdbcContext"));
+        applicationContext.registerBeanDefinition("userDao", beanDefinition);
+
         userDao = applicationContext.getBean("userDao", UserDao.class);
-        // UserDao타입의 userDao라는 이름의 Bean을 주세요.
-        // 이게 Dependency Lookup이라는 개념이다.
     }
 
     @Test
@@ -35,9 +57,9 @@ public class UserDaoTests {
 
         User user = userDao.get(id);
 
-        assertThat(user.getId(),is(id));
-        assertThat(user.getName(),is(name));
-        assertThat(user.getPassword(),is(password));
+        assertThat(user.getId(), is(id));
+        assertThat(user.getName(), is(name));
+        assertThat(user.getPassword(), is(password));
     }
 
     @Test
