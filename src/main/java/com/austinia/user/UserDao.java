@@ -1,17 +1,22 @@
 package com.austinia.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
+import org.springframework.stereotype.Component;
 
 import java.sql.*;
 
+// 스프링이 관리하는 Bean이 된다
+// 즉, DaoFactory에서 Bean으로 정의 하지 않아도 된다
+@Component
 public class UserDao {
-    private final JdbcTemplate jdbcTemplate;
-
-    public UserDao(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
-    }
+    @Autowired // 생성자가 없어도 특정 프로퍼티에 알아서 DI를 해준다
+    private JdbcTemplate jdbcTemplate;
+    // private final JdbcTemplate jdbcTemplate;
+    // 생성자를 통해서 받은 객체가 빈으로 정의되어 있으면 자동적으로 스프링이 DI를 해준다
+    // public UserDao(JdbcTemplate jdbcTemplate) { this.jdbcTemplate = jdbcTemplate; }
 
     public User get(Integer id) {
         Object[] params = new Object[]{id};
@@ -21,7 +26,7 @@ public class UserDao {
         return jdbcTemplate.query(sql, params, rs -> { // 람다식
             // 이전에 했던 방식 그대로
             User user = null;
-            if(rs.next()){
+            if (rs.next()) {
                 user = new User();
                 user.setId(rs.getInt("id"));
                 user.setName(rs.getString("name"));

@@ -20,10 +20,10 @@ public class DaoFactory {
     @Value("${db.password}")
     private String password;
 
-    @Bean // 의존성을 담아 new 해서 오브젝트 인스턴스를 반환하는 인스턴스
-    public UserDao userDao() {
-        return new UserDao(jdbcTemplate());
-    }
+//    @Bean // 의존성을 담아 new 해서 오브젝트 인스턴스를 반환하는 인스턴스
+//    public UserDao userDao() {
+//        return new UserDao(jdbcTemplate());
+//    }
 
     @Bean
     public JdbcTemplate jdbcTemplate() { // jdbcContext 였음

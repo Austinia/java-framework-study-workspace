@@ -4,7 +4,7 @@ import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.GenericGroovyApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -16,7 +16,8 @@ public class UserDaoTests {
 
     @BeforeAll
     public static void setup() {
-        ApplicationContext applicationContext = new GenericGroovyApplicationContext("daoFactory.groovy");
+        // 패키지 전체를 등록하게 되면 @Configuration과 @Bean 등의 어노테이션들을 찾아서 알아서 빈을 등록한다
+        ApplicationContext applicationContext = new AnnotationConfigApplicationContext("com.austinia.user");
         userDao = applicationContext.getBean("userDao", UserDao.class);
     }
 
