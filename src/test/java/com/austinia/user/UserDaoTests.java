@@ -3,16 +3,8 @@ package com.austinia.user;
 import org.hamcrest.core.IsNull;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.beans.factory.config.RuntimeBeanReference;
-import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.context.support.StaticApplicationContext;
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.SimpleDriverDataSource;
-
-import java.sql.SQLException;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
@@ -23,34 +15,13 @@ public class UserDaoTests {
     private static UserDao userDao;
 
     @BeforeAll
-    public static void setup() throws ClassNotFoundException {
-        // ApplicationContext applicationContext = new AnnotationConfigApplicationContext(DaoFactory.class);
-        StaticApplicationContext applicationContext = new StaticApplicationContext();
-
-        BeanDefinition dataSourcebeanDefinition = new RootBeanDefinition(SimpleDriverDataSource.class);
-        dataSourcebeanDefinition.getPropertyValues().addPropertyValue("driverClass"
-                , Class.forName(System.getenv("DB_CLASSNAME")));
-        dataSourcebeanDefinition.getPropertyValues().addPropertyValue("url"
-                , System.getenv("DB_URL"));
-        dataSourcebeanDefinition.getPropertyValues().addPropertyValue("username"
-                , System.getenv("DB_USERNAME"));
-        dataSourcebeanDefinition.getPropertyValues().addPropertyValue("password"
-                , System.getenv("DB_PASSWORD"));
-        applicationContext.registerBeanDefinition("dataSource", dataSourcebeanDefinition);
-
-        BeanDefinition jdbcContextbeanDefinition = new RootBeanDefinition(JdbcTemplate.class);
-        jdbcContextbeanDefinition.getConstructorArgumentValues().addGenericArgumentValue(new RuntimeBeanReference("dataSource"));
-        applicationContext.registerBeanDefinition("jdbcContext", jdbcContextbeanDefinition);
-
-        BeanDefinition beanDefinition = new RootBeanDefinition(UserDao.class);
-        beanDefinition.getConstructorArgumentValues().addGenericArgumentValue(new RuntimeBeanReference("jdbcContext"));
-        applicationContext.registerBeanDefinition("userDao", beanDefinition);
-
+    public static void setup() {
+        ApplicationContext applicationContext = new ClassPathXmlApplicationContext("daoFactory.xml");
         userDao = applicationContext.getBean("userDao", UserDao.class);
     }
 
     @Test
-    public void testGet() throws SQLException, ClassNotFoundException {
+    public void testGet() {
         Integer id = 1;
         String name = "Updated Hulk";
         String password = "1234";
@@ -63,7 +34,7 @@ public class UserDaoTests {
     }
 
     @Test
-    public void insert() throws SQLException, ClassNotFoundException {
+    public void insert() {
         String name = "Austin";
         String password = "1234";
 
@@ -79,7 +50,7 @@ public class UserDaoTests {
     }
 
     @Test
-    public void update() throws SQLException {
+    public void update() {
         String name = "BeforeUser";
         String password = "1234";
         String updatedName = "AfterName";
@@ -100,7 +71,7 @@ public class UserDaoTests {
     }
 
     @Test
-    public void delete() throws SQLException {
+    public void delete() {
         String name = "HaveToDeleteThis";
         String password = "666";
 
@@ -111,7 +82,7 @@ public class UserDaoTests {
 
         userDao.delete(user.getId());
 
-        User deletedUser = userDao.get(user.getId()); // 없는 걸 가져왔으니
-        assertThat(deletedUser, IsNull.nullValue()); // null 인 것을 검증.
+        User deletedUser = userDao.get(user.getId());
+        assertThat(deletedUser, IsNull.nullValue());
     }
 }
