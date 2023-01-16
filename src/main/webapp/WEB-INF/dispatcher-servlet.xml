@@ -30,4 +30,11 @@
     </beans:bean>
     <!-- /images/ 경로의 모든 것은 /WEB-INF/static/ 밑으로 매핑된다 -->
     <resources mapping="/images/**" location="/WEB-INF/static/"/>
+    <interceptors>
+        <interceptor>
+            <!-- 모든 경로의 모든 파일에 -->
+            <mapping path="/**/*"/>
+            <beans:bean class="com.austinia.user.UserInterceptor" />
+        </interceptor>
+    </interceptors>
 </beans:beans>
