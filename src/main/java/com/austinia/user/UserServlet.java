@@ -1,7 +1,9 @@
 package com.austinia.user;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.stereotype.Controller;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
@@ -9,7 +11,9 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import java.io.IOException;
 
+@Controller("/userServlet") // BeanNameUrlHandlerMapping 사용
 public class UserServlet extends GenericServlet {
+    @Autowired
     private UserDao userDao;
     @Override
     public void init() throws ServletException {
@@ -22,7 +26,7 @@ public class UserServlet extends GenericServlet {
     @Override
     public void service(ServletRequest req, ServletResponse res) throws ServletException, IOException {
         System.out.println("**************** Service ****************");
-        User user = userDao.get(26);
+        User user = userDao.get(1);
         StringBuffer stringBuffer = new StringBuffer();
         stringBuffer.append("<html>");
         stringBuffer.append("<h1>");
