@@ -9,9 +9,11 @@ import javax.servlet.GenericServlet;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.annotation.WebServlet;
 import java.io.IOException;
 
 @Controller("/userServlet") // BeanNameUrlHandlerMapping 사용
+@WebServlet(urlPatterns = "/hello")
 public class UserServlet extends GenericServlet {
     @Autowired
     private UserDao userDao;
