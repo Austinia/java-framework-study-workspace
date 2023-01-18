@@ -17,7 +17,7 @@ public class SimpleController implements Controller {
     @Override
     public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws Exception {
         // request의 parameter를 사용하는데 그것은 String이므로 Integer.valueOf()를 사용하자
-        User user = userDao.get(Integer.valueOf(request.getParameter("id")));
+        User user = userDao.findById(Integer.valueOf(request.getParameter("id"))).get();
         // Spring에서 제공하는 Model을 담는 그릇이자 View를 정의하는 그릇이다
         ModelAndView modelAndView = new ModelAndView("user");
         modelAndView.addObject("user", user);

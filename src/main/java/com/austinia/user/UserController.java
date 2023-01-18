@@ -17,7 +17,7 @@ public class UserController {
 
     @RequestMapping(path = "/user") // RequestMapping"HandlerAdapter"에 의해서 찾아진다
     public User getUser(@RequestParam("id") Integer id) {
-        return userDao.get(id);
+        return userDao.findById(id).get();
     }
 
     // GET 메서드로 화면을 출력
