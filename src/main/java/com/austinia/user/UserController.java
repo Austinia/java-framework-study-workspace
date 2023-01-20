@@ -10,22 +10,23 @@ public class UserController {
     private final UserDao userDao;
 
     @GetMapping("/{id}")
-    public User get(@PathVariable("id") Integer id) {
+    public UserDto get(@PathVariable("id") Integer id) {
         return userDao.findById(id).get();
     }
 
     @PostMapping("/upload")
-    public User upload(User user) {
-        userDao.save(user);
-        return user;
+    public UserDto upload(@RequestBody UserDto userDto) {
+        userDao.save(userDto);
+        return userDto;
     }
 
     @PutMapping("/update")
-    public void update(@RequestBody User user) {
-        User tmpuser = userDao.findById(user.getId()).get();
-        tmpuser.setName(user.getName());
-        tmpuser.setPassword(user.getPassword());
-        userDao.save(tmpuser);
+    public UserDto update(@RequestBody UserDto userDto) {
+        UserDto tmpUserDto = userDao.findById(userDto.getId()).get();
+        tmpUserDto.setName(userDto.getName());
+        tmpUserDto.setPassword(userDto.getPassword());
+        userDao.save(tmpUserDto);
+        return tmpUserDto;
     }
 
     @DeleteMapping("/{id}")
