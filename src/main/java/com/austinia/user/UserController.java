@@ -3,34 +3,38 @@ package com.austinia.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api")
 public class UserController {
-    private final UserDao userDao;
 
-    @GetMapping("/{id}")
+    private final UserService userService;
+
+    @GetMapping("/user")
+    public List<UserDto> get() {
+        return userService.getAll();
+    }
+
+    @GetMapping("/user/{id}")
     public UserDto get(@PathVariable("id") Integer id) {
-        return userDao.findById(id).get();
+        return userService.getById(id);
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/user")
     public UserDto upload(@RequestBody UserDto userDto) {
-        userDao.save(userDto);
-        return userDto;
+        return userService.upload(userDto);
     }
 
-    @PutMapping("/update")
+    @PutMapping("/user")
     public UserDto update(@RequestBody UserDto userDto) {
-        UserDto tmpUserDto = userDao.findById(userDto.getId()).get();
-        tmpUserDto.setName(userDto.getName());
-        tmpUserDto.setPassword(userDto.getPassword());
-        userDao.save(tmpUserDto);
-        return tmpUserDto;
+        return userService.update(userDto);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/user/{id}")
     public void delete(@PathVariable("id") Integer id) {
-        userDao.deleteById(id);
+        userService.delete(id);
     }
+
 }
