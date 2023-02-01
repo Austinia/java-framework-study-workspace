@@ -12,9 +12,6 @@ import javax.persistence.Id;
 
 @Entity(name = "userinfo")
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class UserDto {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
