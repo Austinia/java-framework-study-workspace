@@ -5,6 +5,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityExistsException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -17,23 +18,20 @@ public class UserService {
     private final UserDao userDao;
     private final PasswordEncoder passwordEncoder;
 
-//    @Override
-//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-//        UserDto userDto = userDao.findByName(username);
-//        if (userDto == null) {
-//            throw new UsernameNotFoundException(username);
-//        }
-//        return User.builder()
-//                .username(userDto.getName())
-//                .password(userDto.getPassword())
-//                .roles(userDto.getRole())
-//                .build();
-//    }
+    public boolean isNameEmpty(String name) {
+        return userDao.findByName(name).isEmpty();
+    }
 
     public UserDto create(UserDto userDto) {
-        userDto.setRole("USER");
-        userDto.encodePassword(passwordEncoder);
-        return userDao.save(userDto);
+        if (isNameEmpty(userDto.getName())) {
+            userDto.setRole("USER");
+            userDto.encodePassword(passwordEncoder);
+            userDao.save(userDto);
+            userDto.setPassword("CENSORED");
+            return userDto;
+        } else {
+            throw new EntityExistsException(String.format("%s already taken", userDto.getName()));
+        }
     }
 
     public List<UserDto> findAll() {
@@ -52,21 +50,25 @@ public class UserService {
             userDto.setPassword("CENSORED");
             return userDto;
         } else {
-            throw new NoSuchElementException(String.format("%s is not found",id));
+            throw new NoSuchElementException(String.format("%s is not found", id));
         }
     }
 
     public UserDto update(UserDto userDto, Integer id) {
         Optional<UserDto> user = userDao.findById(id);
         if (user.isPresent()) {
-            userDto.setRole(user.get().getRole());
-            userDto.setId(user.get().getId());
-            userDto.encodePassword(passwordEncoder);
-            userDao.save(userDto);
-            userDto.setPassword("CENSORED");
-            return userDto;
+            if (isNameEmpty(userDto.getName())) {
+                userDto.setRole(user.get().getRole());
+                userDto.setId(user.get().getId());
+                userDto.encodePassword(passwordEncoder);
+                userDao.save(userDto);
+                userDto.setPassword("CENSORED");
+                return userDto;
+            } else {
+                throw new EntityExistsException(String.format("%s already taken", userDto.getName()));
+            }
         } else {
-            throw new NoSuchElementException(String.format("%s is not found",userDto.getId()));
+            throw new NoSuchElementException(String.format("%s is not found", userDto.getId()));
         }
     }
 
