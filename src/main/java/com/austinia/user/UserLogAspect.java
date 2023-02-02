@@ -17,7 +17,8 @@ public class UserLogAspect {
 
     // PointCut : 적용할 지점 또는 범위
     @Pointcut("execution(public * com.austinia.user.UserDao.*(..))")
-    private void publicTarget() {}
+    private void publicTarget() {
+    }
 
     // Around : 실제 부가기능 구현
     @SneakyThrows
