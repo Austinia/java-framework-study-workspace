@@ -1,6 +1,8 @@
 package com.austinia.user;
 
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -26,6 +28,24 @@ public class UserAdvice {
         UserEo userEo = new UserEo();
         userEo.setStateCode(400);
         userEo.setMessage(e.getLocalizedMessage());
+        return userEo;
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public UserEo methodNotAllowed(Exception e) {
+        UserEo userEo = new UserEo();
+        userEo.setStateCode(405);
+        userEo.setMessage(e.getLocalizedMessage());
+        return userEo;
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public UserEo messageNotReadable(Exception e) {
+        UserEo userEo = new UserEo();
+        userEo.setStateCode(400);
+        userEo.setMessage("Required request body is missing");
         return userEo;
     }
 

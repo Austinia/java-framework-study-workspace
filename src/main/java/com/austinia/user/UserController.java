@@ -1,6 +1,7 @@
 package com.austinia.user;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -10,36 +11,32 @@ import java.util.List;
 @RequestMapping("/api")
 public class UserController {
 
-    private final UserDao userDao;
+    private final UserService userService;
 
     @GetMapping("/user")
     public List<UserDto> get() {
-        return userDao.findAll();
+        return userService.findAll();
     }
 
     @GetMapping("/user/{id}")
-    public UserDto get(@PathVariable("id") Integer id) {
-        return userDao.findById(id).get();
+    public UserDto get(@PathVariable("id")Integer id) {
+        return userService.findById(id);
     }
-
     @PostMapping("/user")
-    public UserDto upload(@RequestBody UserDto userDto) {
-        userDao.save(userDto);
-        return userDto;
+    @ResponseStatus(HttpStatus.CREATED)
+    public UserDto create(@RequestBody UserDto userDto) {
+        return userService.create(userDto);
     }
 
-    @PutMapping("/user")
-    public UserDto update(@RequestBody UserDto userDto) {
-        UserDto tmpUserDto = userDao.findById(userDto.getId()).get();
-        tmpUserDto.setName(userDto.getName());
-        tmpUserDto.setPassword(userDto.getPassword());
-        userDao.save(tmpUserDto);
-        return tmpUserDto;
+    @PutMapping("/user/{id}")
+    public UserDto update(@PathVariable Integer id, @RequestBody UserDto userDto) {
+        return userService.update(userDto, id);
     }
 
     @DeleteMapping("/user/{id}")
-    public void delete(@PathVariable("id") Integer id) {
-        userDao.deleteById(id);
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void delete(@PathVariable("id")Integer id) {
+        userService.delete(id);
     }
 
 }
