@@ -27,7 +27,6 @@ public class UserService {
             userDto.setRole("USER");
             userDto.encodePassword(passwordEncoder);
             userDao.save(userDto);
-            userDto.setPassword("CENSORED");
             return userDto;
         } else {
             throw new EntityExistsException(String.format("%s already taken", userDto.getName()));
@@ -35,11 +34,7 @@ public class UserService {
     }
 
     public List<UserDto> findAll() {
-        List<UserDto> userList = userDao.findAll();
-        for (UserDto userDto : userList) {
-            userDto.setPassword("CENSORED");
-        }
-        return userList;
+        return userDao.findAll();
     }
 
     public UserDto findById(Integer id) {
@@ -47,7 +42,6 @@ public class UserService {
         UserDto userDto;
         if (user.isPresent()) {
             userDto = user.get();
-            userDto.setPassword("CENSORED");
             return userDto;
         } else {
             throw new NoSuchElementException(String.format("%s is not found", id));
@@ -62,7 +56,6 @@ public class UserService {
                 userDto.setId(user.get().getId());
                 userDto.encodePassword(passwordEncoder);
                 userDao.save(userDto);
-                userDto.setPassword("CENSORED");
                 return userDto;
             } else {
                 throw new EntityExistsException(String.format("%s already taken", userDto.getName()));

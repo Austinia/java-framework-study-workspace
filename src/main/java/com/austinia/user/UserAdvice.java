@@ -59,4 +59,13 @@ public class UserAdvice {
         return userEo;
     }
 
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.METHOD_NOT_ALLOWED)
+    public UserEo IllegalArgument(Exception e) {
+        UserEo userEo = new UserEo();
+        userEo.setStateCode(405);
+        userEo.setMessage(e.getLocalizedMessage());
+        return userEo;
+    }
+
 }
