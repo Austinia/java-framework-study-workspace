@@ -5,6 +5,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Service
 @Transactional
 @AllArgsConstructor
@@ -14,11 +16,13 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     public boolean isValid(UserDto userDto) {
-        if (userDao.findByName(userDto.getName()).isPresent()) {
-            String dbPassword = userDao.findByName(userDto.getName()).get().getPassword();
+        Optional<UserDto> user = userDao.findByName(userDto.getName());
+        if (user.isPresent()) {
+            String dbPassword = user.get().getPassword();
             return passwordEncoder.matches(userDto.getPassword(), dbPassword);
+        } else {
+            return false;
         }
-        return userDao.findByName(userDto.getName()).isPresent();
     }
 
     public String login(UserDto userDto) {

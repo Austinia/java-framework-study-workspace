@@ -3,7 +3,6 @@ package com.austinia.user;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
@@ -26,12 +25,6 @@ public class UserSecurityConfig {
                 .anyRequest().hasRole("USER");
         return httpSecurity.build();
     }
-
-    @Bean
-    public AuthenticationManager authenticationManager(){
-        return authentication -> authentication;
-    }
-
     @Bean
     public PasswordEncoder passwordEncoder() {
         return PasswordEncoderFactories.createDelegatingPasswordEncoder();
