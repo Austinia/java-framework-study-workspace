@@ -1,4 +1,4 @@
-package com.austinia.user;
+package com.austinia.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

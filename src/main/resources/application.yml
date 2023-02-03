@@ -9,8 +9,3 @@ logging:
   level:
     org.springframework: INFO
     org.springframework.web: DEBUG
-
-jwt:
-  header: Authorization
-  secret: Z2ZkZmdkZmxrZ2pkbGZrZ2pzYXNkamtoYXNrZGphaHNka2phaHNkCg
-  access-token-validity-in-seconds: 600 # 10 min

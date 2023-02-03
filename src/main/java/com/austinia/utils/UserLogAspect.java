@@ -1,4 +1,4 @@
-package com.austinia.user;
+package com.austinia.utils;
 
 import lombok.SneakyThrows;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -16,7 +16,7 @@ public class UserLogAspect {
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     // PointCut : 적용할 지점 또는 범위
-    @Pointcut("execution(public * com.austinia.user.UserDao.*(..))")
+    @Pointcut("execution(public * com.austinia.repository.UserDao.*(..))")
     private void publicTarget() {
     }
 

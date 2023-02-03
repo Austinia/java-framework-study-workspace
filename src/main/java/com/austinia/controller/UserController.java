@@ -1,5 +1,7 @@
-package com.austinia.user;
+package com.austinia.controller;
 
+import com.austinia.service.UserService;
+import com.austinia.domain.UserDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

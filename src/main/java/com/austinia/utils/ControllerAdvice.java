@@ -1,5 +1,6 @@
-package com.austinia.user;
+package com.austinia.utils;
 
+import com.austinia.domain.UserEo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -11,7 +12,7 @@ import javax.persistence.EntityExistsException;
 import java.util.NoSuchElementException;
 
 @RestControllerAdvice
-public class UserAdvice {
+public class ControllerAdvice {
     // id == int, but no data
     @ExceptionHandler(NoSuchElementException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
